@@ -1,8 +1,19 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"self_crud/service"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Handler struct {
+	service *service.Service
+}
+
+func NewHandler(s *service.Service) *Handler {
+	return &Handler{
+		s,
+	}
 }
 
 func (h *Handler) InitHandler() *gin.Engine {
@@ -10,8 +21,8 @@ func (h *Handler) InitHandler() *gin.Engine {
 
 	taskGroup := core.Group("/tasks")
 	{
-		taskGroup.GET("/", h.getTasks)
-		taskGroup.GET("/:id", h.getTasks)
+		taskGroup.GET("/", h.getAllTasks)
+		taskGroup.GET("/:id", h.getSingleTask)
 		taskGroup.POST("/", h.createTask)
 		taskGroup.PUT("/:id", h.updateTask)
 		taskGroup.DELETE("/:id", h.deleteTask)

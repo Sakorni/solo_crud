@@ -2,10 +2,12 @@ package main
 
 import (
 	"self_crud/server"
+	"self_crud/service"
 )
 
 func main() {
-	h := server.Handler{}
+	service := service.NewService()
+	h := server.NewHandler(service)
 	server := h.InitHandler()
 	server.Run(":80")
 }
