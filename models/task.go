@@ -1,11 +1,12 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
+//There GORM provides me fields such as ID, CreatedAt, UpdatedAt, DeletedAt
 type Task struct {
-	Id        string    `json:"id" db:"id"`
-	Title     string    `json:"title" db:"title"`
-	Status    string    `json:"status" db:"status"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	gorm.Model
+	Title  string `json:"title" db:"title"`
+	Status string `json:"status" db:"status"`
 }
