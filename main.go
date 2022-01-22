@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"self_crud/server"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	h := server.Handler{}
+	server := h.InitHandler()
+	server.Run(":80")
 }
