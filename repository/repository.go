@@ -15,5 +15,7 @@ type Repository struct {
 }
 
 func NewRepository() *Repository {
-	return &Repository{}
+	return &Repository{
+		NewTaskRepository(),
+	}
 }

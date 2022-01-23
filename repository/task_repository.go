@@ -4,6 +4,10 @@ import "self_crud/models"
 
 type TaskRepository struct{}
 
+func NewTaskRepository() *TaskRepository {
+	return &TaskRepository{}
+}
+
 func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
 	return nil, nil
 }
