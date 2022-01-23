@@ -1,6 +1,10 @@
 package repository
 
-import "self_crud/models"
+import (
+	"self_crud/models"
+
+	"gorm.io/gorm"
+)
 
 type Task interface {
 	GetTask(id int) (*models.Task, error)
@@ -14,8 +18,8 @@ type Repository struct {
 	Task
 }
 
-func NewRepository() *Repository {
+func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		NewTaskRepository(),
+		NewTaskRepository(db),
 	}
 }

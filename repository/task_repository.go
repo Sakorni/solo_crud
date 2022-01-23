@@ -7,10 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type TaskRepository struct{}
+type TaskRepository struct {
+	db *gorm.DB
+}
 
-func NewTaskRepository() *TaskRepository {
-	return &TaskRepository{}
+func NewTaskRepository(db *gorm.DB) *TaskRepository {
+	return &TaskRepository{db}
 }
 
 func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
