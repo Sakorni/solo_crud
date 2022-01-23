@@ -2,37 +2,27 @@ package service
 
 import (
 	"self_crud/models"
-	"time"
-
-	"gorm.io/gorm"
+	"self_crud/repository"
 )
 
 type TaskService struct {
+	repo repository.Task
 }
 
 func (t *TaskService) GetTask(id int) (*models.Task, error) {
-	return &models.Task{
-		Model: gorm.Model{
-			ID:        uint(id),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			DeletedAt: gorm.DeletedAt{},
-		},
-		Title:  "Aboba",
-		Status: "In progress",
-	}, nil
+	return t.repo.GetTask(id)
 }
 
 func (t *TaskService) GetTasks() ([]*models.Task, error) {
-	return []*models.Task{}, nil
+	return t.repo.GetTasks()
 }
 
-func (t *TaskService) CreateTask(*models.Task) (int, error) {
-	return 0, nil
+func (t *TaskService) CreateTask(task *models.Task) (int, error) {
+	return t.repo.CreateTask(task)
 }
 func (t *TaskService) UpdateTask(id int) error {
-	return nil
+	return t.repo.UpdateTask(id)
 }
 func (t *TaskService) DeleteTask(id int) error {
-	return nil
+	return t.repo.DeleteTask(id)
 }

@@ -1,6 +1,11 @@
 package repository
 
-import "self_crud/models"
+import (
+	"self_crud/models"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type TaskRepository struct{}
 
@@ -9,7 +14,16 @@ func NewTaskRepository() *TaskRepository {
 }
 
 func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
-	return nil, nil
+	return &models.Task{
+		Model: gorm.Model{
+			ID:        uint(id),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			DeletedAt: gorm.DeletedAt{},
+		},
+		Title:  "Aboba",
+		Status: "In progress",
+	}, nil
 }
 func (t *TaskRepository) GetTasks() ([]*models.Task, error) {
 	return nil, nil
