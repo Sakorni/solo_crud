@@ -10,8 +10,12 @@ import (
 )
 
 func (h *Handler) getAllTasks(c *gin.Context) {
-	var tasks []models.Task
-	c.IndentedJSON(http.StatusOK, tasks)
+	tasks, err := h.service.GetTasks()
+	if err != nil{
+		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, tasks)
 }
 
 func (h *Handler) getSingleTask(c *gin.Context) {
@@ -53,8 +57,9 @@ func (h *Handler) createTask(c *gin.Context) {
 	id, err := h.service.CreateTask(&task)
 	if err != nil {
 		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
-	c.JSON(http.StatusOK, map[string]int{"id": id})
+	c.JSON(http.StatusCreated, map[string]int{"id": id})
 }
 
 func (h *Handler) deleteTask(c *gin.Context) {

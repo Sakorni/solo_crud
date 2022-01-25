@@ -14,7 +14,7 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 }
 
 func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
-	var res *models.Task
+	res := new(models.Task)
 	if err := t.db.Find(res, id).Error; err != nil{
 		return nil, err
 	}
@@ -22,9 +22,13 @@ func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
 
 }
 func (t *TaskRepository) GetTasks() ([]*models.Task, error) {
-	var res []*models.Task
-	if err := t.db.Find(&res).Error; err != nil{
+	var temp = make([]models.Task,0)
+	if err := t.db.Find(&temp).Error; err != nil{
 		return nil, err
+	}
+	res := make([]*models.Task, len(temp))
+	for i := range temp{
+		res[i] = &temp[i]
 	}
 	return res, nil
 }
