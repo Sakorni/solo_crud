@@ -22,13 +22,9 @@ func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
 
 }
 func (t *TaskRepository) GetTasks() ([]*models.Task, error) {
-	var temp = make([]models.Task,0)
-	if err := t.db.Find(&temp).Error; err != nil{
+	var res []*models.Task
+	if err := t.db.Find(&res).Error; err != nil{
 		return nil, err
-	}
-	res := make([]*models.Task, len(temp))
-	for i := range temp{
-		res[i] = &temp[i]
 	}
 	return res, nil
 }
