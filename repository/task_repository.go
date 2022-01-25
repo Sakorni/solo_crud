@@ -1,10 +1,8 @@
 package repository
 
 import (
-	"self_crud/models"
-	"time"
-
 	"gorm.io/gorm"
+	"self_crud/models"
 )
 
 type TaskRepository struct {
@@ -16,27 +14,30 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 }
 
 func (t *TaskRepository) GetTask(id int) (*models.Task, error) {
-	return &models.Task{
-		Model: gorm.Model{
-			ID:        uint(id),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			DeletedAt: gorm.DeletedAt{},
-		},
-		Title:  "Aboba",
-		Status: "In progress",
-	}, nil
+	var res *models.Task
+	if err := t.db.Find(res, id).Error; err != nil{
+		return nil, err
+	}
+	return res, nil
+
 }
 func (t *TaskRepository) GetTasks() ([]*models.Task, error) {
-	return nil, nil
+	var res []*models.Task
+	if err := t.db.Find(&res).Error; err != nil{
+		return nil, err
+	}
+	return res, nil
 }
-func (t *TaskRepository) CreateTask(*models.Task) (int, error) {
-	return 0, nil
+func (t *TaskRepository) CreateTask(task *models.Task) (int, error) {
+	if err := t.db.Create(task).Error; err != nil{
+		return 0, err
+	}
+	return int(task.ID), nil
 }
 func (t *TaskRepository) UpdateTask(id int) error {
-	return nil
+	 return t.db.Model(&models.Task{}).Where("id = ?", id).Update("status", "done").Error
 }
 
 func (t *TaskRepository) DeleteTask(id int) error {
-	return nil
+	return t.db.Delete(&models.Task{}, id).Error
 }
