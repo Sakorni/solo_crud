@@ -27,6 +27,10 @@ func (h *Handler) InitHandler() *gin.Engine {
 		taskGroup.PUT("/:id", h.updateTask)
 		taskGroup.DELETE("/:id", h.deleteTask)
 	}
-
+	authGroup := core.Group("/auth")
+	{
+		authGroup.POST("/sign_in", h.signIn)
+		authGroup.POST("/sign_up", h.signUp)
+	}
 	return core
 }
