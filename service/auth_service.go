@@ -5,25 +5,46 @@ import (
 	"fmt"
 	"self_crud/repository"
 )
+var NoSuchUser = fmt.Errorf("no such user")
 
-const salt = "jsn12mslz.apdcks"
+const (
+	salt = "jsn12mslz.apdcks"
+	signingKey = "kaso2lw223xla;wpxSDKzlspSNwPX"
+)
 
 type AuthService struct{
 	rep repository.Auth
+	jwtService *JWTService
 }
 
-func NewAuthService(rep repository.Auth) *AuthService {
+func NewAuthService(rep repository.Auth, jwt *JWTService) *AuthService {
 	return &AuthService{
 		rep,
+		jwt,
 	}
 }
 
-func (a *AuthService) SignIn(username, password string) (uint, error) {
-	return a.rep.SignIn(username, hashPassword(password))
+func (a *AuthService) GenerateToken(username, password string) (string, error) {
+	id, err :=  a.rep.SignIn(username, hashPassword(password))
+	if err != nil{
+		return "", err
+	}
+	if id == 0{
+		return "", NoSuchUser
+	}
+	return a.jwtService.GenerateToken(id)
 }
 
-func (a *AuthService) SignUp(username, password string) (uint, error) {
-	return a.rep.SignUp(username, hashPassword(password))
+func (a *AuthService) SignUp(username, password string) (string, error) {
+	id, err :=  a.rep.SignUp(username, hashPassword(password))
+	if err != nil{
+		return "", err
+	}
+	return a.jwtService.GenerateToken(id)
+}
+
+func (a * AuthService) ParseToken(token string)(uint, error){
+	return a.jwtService.ParseToken(token)
 }
 
 func hashPassword(password string) string{

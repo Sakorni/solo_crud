@@ -26,7 +26,7 @@ func main() {
 		logrus.Fatalf("Error occured during setting db connection: %s", err.Error())
 	}
 	rep := repository.NewRepository(db)
-	service := service.NewService(rep)
+	service := service.NewService(rep, &service.JWTService{})
 	h := server.NewHandler(service)
 	server := h.InitHandler()
 	server.Run(":" + os.Getenv("APP_PORT"))

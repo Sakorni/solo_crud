@@ -15,8 +15,8 @@ type Task interface {
 }
 
 type Auth interface {
-	SignIn(username, password string) (uint, error)
-	SignUp(username, password string) (uint, error)
+	GenerateToken(username, password string) (string, error)
+	SignUp(username, password string) (string, error)
 }
 
 type Service struct {
@@ -24,9 +24,9 @@ type Service struct {
 	Auth
 }
 
-func NewService(rep *repository.Repository) *Service {
+func NewService(rep *repository.Repository, jwt *JWTService) *Service {
 	return &Service{
 		NewTaskService(rep),
-		NewAuthService(rep),
+		NewAuthService(rep, jwt),
 	}
 }

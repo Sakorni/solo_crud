@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"self_crud/models"
+	"self_crud/service"
 	"strings"
 )
 
@@ -19,20 +20,22 @@ func (h *Handler) signIn(c *gin.Context)  {
 		sendErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.service.SignIn(user.Username, user.Password)
+	token, err := h.service.GenerateToken(user.Username, user.Password)
 	if err != nil{
-		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if err == service.NoSuchUser{
+			sendErrorResponse(c, http.StatusNotFound, err.Error())
+		}else{
+			sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
-	if id == 0{
-		sendErrorResponse(c, http.StatusNotFound, "No such user")
-		return
-	}
-	c.JSON(http.StatusOK, map[string]uint{
-		"id":id,
+	c.JSON(http.StatusOK, map[string]string{
+		"token":token,
 	})
 
 }
+
+
 func (h *Handler) signUp(c *gin.Context)  {
 	var user models.User
 	err := c.BindJSON(&user)
@@ -44,15 +47,14 @@ func (h *Handler) signUp(c *gin.Context)  {
 		sendErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.service.SignUp(user.Username, user.Password)
+	token, err := h.service.SignUp(user.Username, user.Password)
 	if err != nil{
 		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, map[string]uint{
-		"id":id,
+	c.JSON(http.StatusCreated, map[string]string{
+		"token":token,
 	})
-
 }
 
 
