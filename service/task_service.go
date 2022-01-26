@@ -9,6 +9,10 @@ type TaskService struct {
 	repo repository.Task
 }
 
+func NewTaskService(repo repository.Task) *TaskService {
+	return &TaskService{repo: repo}
+}
+
 func (t *TaskService) GetTask(id int) (*models.Task, error) {
 	return t.repo.GetTask(id)
 }

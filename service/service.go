@@ -14,12 +14,19 @@ type Task interface {
 	DeleteTask(id int) error
 }
 
+type Auth interface {
+	SignIn(username, password string) (uint, error)
+	SignUp(username, password string) (uint, error)
+}
+
 type Service struct {
 	Task
+	Auth
 }
 
 func NewService(rep *repository.Repository) *Service {
 	return &Service{
-		&TaskService{rep},
+		NewTaskService(rep),
+		NewAuthService(rep),
 	}
 }
