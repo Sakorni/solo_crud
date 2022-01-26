@@ -24,6 +24,10 @@ func (h *Handler) signIn(c *gin.Context)  {
 		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	if id == 0{
+		sendErrorResponse(c, http.StatusNotFound, "No such user")
+		return
+	}
 	c.JSON(http.StatusOK, map[string]uint{
 		"id":id,
 	})
