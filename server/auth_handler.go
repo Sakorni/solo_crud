@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"self_crud/models"
 	"self_crud/service"
@@ -11,7 +12,7 @@ import (
 
 func (h *Handler) signIn(c *gin.Context)  {
 	var user models.User
-	err := c.BindJSON(&user)
+	err := c.ShouldBindWith(&user, binding.JSON)
 	if err != nil{
 		sendErrorResponse(c, http.StatusBadRequest, "Invalid body " + err.Error())
 		return
@@ -29,7 +30,7 @@ func (h *Handler) signIn(c *gin.Context)  {
 		}
 		return
 	}
-	c.JSON(http.StatusOK, map[string]string{
+	c.JSON(http.StatusOK, gin.H{
 		"token":token,
 	})
 
@@ -38,7 +39,7 @@ func (h *Handler) signIn(c *gin.Context)  {
 
 func (h *Handler) signUp(c *gin.Context)  {
 	var user models.User
-	err := c.BindJSON(&user)
+	err := c.ShouldBindWith(&user, binding.JSON)
 	if err != nil{
 		sendErrorResponse(c, http.StatusBadRequest, "Invalid body " + err.Error())
 		return
@@ -49,10 +50,14 @@ func (h *Handler) signUp(c *gin.Context)  {
 	}
 	token, err := h.service.SignUp(user.Username, user.Password)
 	if err != nil{
-		sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if strings.Contains(err.Error(), "Duplicate entry"){
+			sendErrorResponse(c, http.StatusConflict, "This username is already taken.")
+		}else{
+			sendErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
-	c.JSON(http.StatusCreated, map[string]string{
+	c.JSON(http.StatusCreated, gin.H{
 		"token":token,
 	})
 }

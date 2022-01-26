@@ -6,7 +6,7 @@ import (
 )
 
 type serverError struct {
-	Message string
+	Message string `json:"message"`
 }
 
 func sendErrorResponse(c *gin.Context, code int, message string) {
