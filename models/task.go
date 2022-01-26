@@ -9,4 +9,5 @@ type Task struct {
 	gorm.Model
 	Title  string `json:"title" db:"title"`
 	Status string `json:"status" db:"status"`
+	UserID uint
 }
