@@ -14,12 +14,19 @@ type Task interface {
 	DeleteTask(id int) error
 }
 
+type Auth interface {
+	SignIn(username, hashedPassword string) (uint, error)
+	SignUp(username, hashedPassword string) (uint, error)
+}
+
 type Repository struct {
 	Task
+	Auth
 }
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		NewTaskRepository(db),
+		NewAuthRepository(db),
 	}
 }
