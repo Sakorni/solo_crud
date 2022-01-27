@@ -10,6 +10,8 @@ type Handler struct {
 	service *service.Service
 }
 
+const uidKey = "user_id"
+
 func NewHandler(s *service.Service) *Handler {
 	return &Handler{
 		s,
@@ -19,7 +21,7 @@ func NewHandler(s *service.Service) *Handler {
 func (h *Handler) InitHandler() *gin.Engine {
 	core := gin.New()
 
-	taskGroup := core.Group("/tasks")
+	taskGroup := core.Group("/tasks", h.identifyUser)
 	{
 		taskGroup.GET("/", h.getAllTasks)
 		taskGroup.GET("/:id", h.getSingleTask)

@@ -21,8 +21,8 @@ func CreateConnection(cfg DBConfig) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate( &models.User{}, &models.Task{})
-	if err != nil{
+	err = db.AutoMigrate(&models.User{}, &models.Task{})
+	if err != nil {
 		return nil, err
 	}
 	return db, err

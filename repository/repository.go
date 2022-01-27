@@ -7,11 +7,11 @@ import (
 )
 
 type Task interface {
-	GetTask(id int) (*models.Task, error)
-	GetTasks() ([]*models.Task, error)
-	CreateTask(*models.Task) (int, error)
-	UpdateTask(id int) error
-	DeleteTask(id int) error
+	GetTask(uid uint, id int) (*models.Task, error)
+	GetTasks(uid uint) ([]*models.Task, error)
+	CreateTask(task *models.Task) (int, error)
+	UpdateTask(uid uint, id int) error
+	DeleteTask(uid uint, id int) error
 }
 
 type Auth interface {

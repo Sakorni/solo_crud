@@ -5,7 +5,7 @@ import (
 	"self_crud/models"
 )
 
-type AuthRepository struct{
+type AuthRepository struct {
 	db *gorm.DB
 }
 
@@ -19,7 +19,7 @@ func (a *AuthRepository) SignUp(username, hashedPassword string) (uint, error) {
 		Password: hashedPassword,
 	}
 	err := a.db.Create(&user).Error
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
 	return user.ID, nil
@@ -31,9 +31,8 @@ func (a *AuthRepository) SignIn(username, hashedPassword string) (uint, error) {
 		Password: hashedPassword,
 	}
 	err := a.db.Where(&user).Find(&user).Error
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
 	return user.ID, err
 }
-
